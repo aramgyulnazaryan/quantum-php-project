@@ -1,36 +1,43 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Base\Services\AuthService;
 use Quantum\Factory\ServiceFactory;
+use Base\Services\AuthServiceDB;
 
 class AuthServiceTest extends TestCase
 {
 
-    public $authService;
     private $initialUser = [
         'username' => 'admin@qt.com',
         'password' => '$2y$12$0M78WcmUZYQq85vHZLoNW.CyDUezRxh9Ye8/Z8oWCwJmBrz8p.j7C',
+        'role' => 'admin',
         'firstname' => 'Admin',
         'lastname' => 'User',
-        'role' => 'admin',
         'remember_token' => '',
         'reset_token' => '',
     ];
+    public $authService;
 
     public function setUp(): void
     {
-        $this->authService = (new ServiceFactory)->get(AuthService::class);
+        $this->authService = (new ServiceFactory)->get(AuthServiceDB::class);
 
         $reflectionProperty = new \ReflectionProperty($this->authService, 'users');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->authService, []);
+    }
 
-        $this->authService->add($this->initialUser);
+    public function tearDown(): void
+    {
+        $reflectionProperty = new \ReflectionProperty(ServiceFactory::class, 'initialized');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue(ServiceFactory::class, []);
     }
 
     public function testGet()
     {
+        $this->authService->add($this->initialUser);
+
         $user = $this->authService->get('username', 'admin@qt.com');
         $this->assertIsArray($user);
         $this->assertArrayHasKey('password', $user);
@@ -51,9 +58,9 @@ class AuthServiceTest extends TestCase
             'lastname' => 'User',
         ]);
 
-        $this->assertIsObject($user);
-        $this->assertObjectHasAttribute('username', $user);
-        $this->assertEquals('guest@qt.com', $user->username);
+        $this->assertIsArray($user);
+        $this->assertArrayHasKey('username', $user);
+        $this->assertEquals('guest@qt.com', $user['username']);
     }
 
     public function testUpdate()

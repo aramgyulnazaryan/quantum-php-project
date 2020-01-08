@@ -2,6 +2,8 @@
 
 namespace Modules\Web\Middlewares;
 
+use Base\models\AuthModel;
+use Quantum\Factory\ModelFactory;
 use Quantum\Libraries\Validation\Validation;
 use Quantum\Exceptions\ExceptionMessages;
 use Quantum\Middleware\Qt_Middleware;
@@ -36,14 +38,11 @@ class Forget extends Qt_Middleware
 
     private function emailExists($email)
     {
-        $users = $users = loadUsers();
+        $authModel = (new ModelFactory())->get(AuthModel::class);
+        $user = $authModel->criterias(['username', '=', $email])->count();
 
-        if (is_array($users) && count($users) > 0) {
-            foreach ($users as $user) {
-                if ($user['username'] == $email) {
-                    return true;
-                }
-            }
+        if($user) {
+            return true;
         }
 
         return false;

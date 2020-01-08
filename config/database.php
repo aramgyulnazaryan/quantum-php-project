@@ -25,12 +25,12 @@ return [
      * charset    : Default charset
      */
     'mysql' => array(
-        'driver' => 'mysql',
-        'host' => 'localhost',
-        'dbname' => 'database',
-        'username' => 'username',
-        'password' => 'password',
-        'charset' => 'charset',
+        'driver' => env("DB_DRIVER", "mysql"),
+        'host' => env("DB_HOST", "localhost"),
+        'dbname' => env("DB_NAME", "test"),
+        'username' => env("DB_USERNAME", "root"),
+        'password' => env("DB_PASSWORD"),
+        'charset' => env("DB_CHARSET", 'utf8'),
     ),
     'sqlite' => array(
         'driver' => 'sqlite',

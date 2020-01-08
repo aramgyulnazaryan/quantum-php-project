@@ -10,13 +10,13 @@ return [
      * Service identifies the Auth service to use
      */
     'type' => 'api',
-    'service' => Base\Services\AuthService::class,
+    'service' => Base\Services\AuthServiceDB::class,
     'claims' => [
         'jti' => uniqid(),
         'iss' => 'issuer',
         'aud' => 'audience',
         'iat' => time(),
         'nbf' => time() + 1,
-        'exp' => time() + 150
+        'exp' => time() + 60
     ]
 ];

@@ -28,30 +28,20 @@ class PostController extends Qt_Controller
     public function getPosts(Response $response)
     {
         $posts = $this->postService->getPosts();
-        $response->json([
-            'status' => 'success',
-            'data' => $posts
-        ]);
+        $response->json($posts);
     }
 
     public function getPost(Response $response, $id)
     {
-        $post = $this->postService->getPost($id);
-        if ($post) {
-            $response->json([
-                'status' => 'success',
-                'data' => $post
-            ]);
-        } else {
-            $response->json([
-                'status' => 'error',
-                'message' => 'Post not found'
-            ]);
+        try {
+            $post = $this->postService->getPost($id);
+            $response->json($post);
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
         }
-
     }
 
-    public function amendPost(Request $request, Response $response, $id = null)
+    public function amendPost( Request $request, Response $response, $id = null)
     {
         $post = [
             'title' => $request->get('title'),
@@ -60,26 +50,17 @@ class PostController extends Qt_Controller
 
         if ($id) {
             $this->postService->updatePost($id, $post);
-            $response->json([
-                'status' => 'success',
-                'message' => 'Updated successfuly'
-            ]);
+            $response->json(['status' => 'updated successfuly']);
         } else {
             $this->postService->addPost($post);
-            $response->json([
-                'status' => 'success',
-                'message' => 'Created successfuly'
-            ]);
+            $response->json(['status' => 'created successfuly']);
         }
     }
 
     public function deletePost(Response $response, $id)
     {
         $this->postService->deletePost($id);
-        $response->json([
-            'status' => 'success',
-            'message' => 'Deleted successfuly'
-        ]);
+        $response->json(['status' => 'deleted successfuly']);
     }
 
 }

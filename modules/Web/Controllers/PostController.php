@@ -14,6 +14,7 @@ class PostController extends Qt_Controller
 
     public $view;
     public $postService;
+    public $csrfVerification = false;
 
     public function __before(ServiceFactory $serviceFactory, ViewFactory $view)
     {
@@ -26,6 +27,7 @@ class PostController extends Qt_Controller
     public function getPosts()
     {
         $posts = $this->postService->getPosts();
+
         $this->view->render('post/post', ['posts' => $posts]);
     }
 
@@ -56,6 +58,7 @@ class PostController extends Qt_Controller
 
             $this->view->render('post/form', ['id' => $id, 'post' => $post]);
         } else {
+
             $post = [
                 'title' => $request->get('title'),
                 'content' => $request->get('content'),

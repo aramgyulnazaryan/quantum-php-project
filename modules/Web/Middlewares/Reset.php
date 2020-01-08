@@ -2,6 +2,10 @@
 
 namespace Modules\Web\Middlewares;
 
+use Base\models\AuthModel;
+use Base\Services\AuthServiceDB;
+use Quantum\Factory\ModelFactory;
+use Quantum\Factory\ServiceFactory;
 use Quantum\Libraries\Validation\Validation;
 use Quantum\Exceptions\ExceptionMessages;
 use Quantum\Middleware\Qt_Middleware;
@@ -18,6 +22,7 @@ class Reset extends Qt_Middleware
 
     public function apply(Request $request, Response $response, \Closure $next)
     {
+
         list($lang, $token) = current_route_args();
 
         if ($request->getMethod() == 'POST') {
@@ -44,15 +49,11 @@ class Reset extends Qt_Middleware
 
     private function checkToken($token)
     {
-        $users = loadUsers();
+        $authModel = (new ModelFactory())->get(AuthModel::class);
+        $user = $authModel->criterias(['reset_token', '=', $token])->count();
 
-        if (is_array($users) && count($users) > 0) {
-
-            foreach ($users as $user) {
-                if (isset($user['reset_token']) && $user['reset_token'] == $token) {
-                    return true;
-                }
-            }
+        if($user) {
+            return true;
         }
 
         return false;

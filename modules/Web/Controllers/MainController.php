@@ -2,8 +2,6 @@
 
 namespace Modules\Web\Controllers;
 
-use Base\Models\AuthModel;
-use Quantum\Factory\ModelFactory;
 use Quantum\Factory\ViewFactory;
 use Quantum\Libraries\Lang\Lang;
 use Quantum\Mvc\Qt_Controller;
@@ -23,7 +21,7 @@ class MainController extends Qt_Controller
         $this->view->setLayout('layouts/main');
     }
 
-    public function index(ModelFactory $modelFactory)
+    public function index()
     {
         $this->view->render('index');
     }

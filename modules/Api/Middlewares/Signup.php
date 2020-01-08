@@ -2,6 +2,8 @@
 
 namespace Modules\Api\Middlewares;
 
+use Base\models\AuthModel;
+use Quantum\Factory\ModelFactory;
 use Quantum\Libraries\Validation\Validation;
 use Quantum\Exceptions\ExceptionMessages;
 use Quantum\Middleware\Qt_Middleware;
@@ -42,23 +44,11 @@ class Signup extends Qt_Middleware
 
     private function isUnique($userData)
     {
-        $loaderSetup = (object)[
-            'module' => current_module(),
-            'env' => 'base/repositories',
-            'fileName' => 'users',
-            'exceptionMessage' => ExceptionMessages::CONFIG_FILE_NOT_FOUND
-        ];
+        $authModel = (new ModelFactory())->get(AuthModel::class);
+        $user = $authModel->criterias(['username', '=', $userData['username']])->count();
 
-        $loader = new Loader($loaderSetup);
-
-        $users = $loader->load();
-
-        if (is_array($users) && count($users) > 0) {
-            foreach ($users as $user) {
-                if ($user['username'] == $userData['username']) {
-                    return false;
-                }
-            }
+        if($user) {
+            return false;
         }
 
         return true;

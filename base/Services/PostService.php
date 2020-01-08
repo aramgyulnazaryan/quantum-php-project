@@ -45,14 +45,7 @@ class PostService extends Qt_Service
 
     public function getPosts()
     {
-        $posts = [];
-
-        foreach(self::$posts as $id => $post) {
-            $post['id'] = $id;
-            $posts[$id] = $post;
-        }
-
-        return $posts;
+        return self::$posts;
     }
 
     public function getPost($id)

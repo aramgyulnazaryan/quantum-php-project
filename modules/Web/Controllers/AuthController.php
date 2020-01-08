@@ -34,7 +34,6 @@ class AuthController extends Qt_Controller
             session()->setFlash('error', ExceptionMessages::INCORRECT_AUTH_CREDENTIALS);
             redirect(base_url() . '/' . current_lang() . '/signin');
         } else {
-            session()->flush();
             $this->view->render($this->signinView);
         }
     }
@@ -64,7 +63,6 @@ class AuthController extends Qt_Controller
             $mailer->createSubject(t('common.reset_password'));
 
             $emailTemplate = base_dir() . DS . 'base' . DS . 'views' . DS . 'email' . DS . 'reset';
-
             auth()->forget($mailer, $request->get('email'), $emailTemplate);
 
             session()->setFlash('success', t('common.check_email'));
@@ -76,6 +74,7 @@ class AuthController extends Qt_Controller
 
     public function reset(Request $request)
     {
+
         if ($request->getMethod() == 'POST') {
             auth()->reset($request->get('reset_token'), $request->get('password'));
             redirect(base_url() . '/' . current_lang() . '/signin');
