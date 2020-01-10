@@ -18,13 +18,13 @@
                                         <div class="heading-text el-text mobile-hidden bottom-t-top animate_when_almost_visible" data-delay="400">
                                             <ul class="step-list">
                                                 <?php if (count($posts) > 0): ?>
-                                                    <?php foreach ($posts as $id => $post): ?>
+                                                    <?php foreach ($posts as $post): ?>
                                                         <li>
                                                             <h5>
-                                                                <a href="<?php echo base_url() .  '/' . current_lang() . '/post/' . $id ?>">#<?php echo $id ?> <?php echo $post['title'] ?></a>
+                                                                <a href="<?php echo base_url() .  '/' . current_lang() . '/post/' . $post['id'] ?>">#<?php echo $post['id'] ?> <?php echo $post['title'] ?></a>
                                                                 <?php if (auth()->user()->role == 'admin'): ?>
-                                                                    <span class="edit-post">[&nbsp;<a href="<?php echo base_url() . '/' . current_lang() . '/post/amend/' . $id ?>"><?php _t('common.edit'); ?></a>&nbsp;]</span>
-                                                                    <span class="edit-post">[&nbsp;<a href="<?php echo base_url() . '/' . current_lang() . '/post/delete/' . $id ?>" class="delete-post"><?php _t('common.delete'); ?></a>&nbsp;]</span>
+                                                                    <span class="edit-post">[&nbsp;<a href="<?php echo base_url() . '/' . current_lang() . '/post/amend/' . $post['id'] ?>"><?php _t('common.edit'); ?></a>&nbsp;]</span>
+                                                                    <span class="edit-post">[&nbsp;<a href="<?php echo base_url() . '/' . current_lang() . '/post/delete/' . $post['id'] ?>" class="delete-post"><?php _t('common.delete'); ?></a>&nbsp;]</span>
                                                                 <?php endif; ?>
                                                             </h5>
                                                             <p><?php echo $post['content'] ?></p>

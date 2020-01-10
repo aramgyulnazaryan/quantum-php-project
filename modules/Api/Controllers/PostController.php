@@ -2,11 +2,11 @@
 
 namespace Modules\Api\Controllers;
 
+use Base\Services\PostServiceDB;
 use Quantum\Factory\ServiceFactory;
 use Quantum\Factory\ViewFactory;
 use Quantum\Mvc\Qt_Controller;
 use Quantum\Hooks\HookManager;
-use Base\Services\PostService;
 use Quantum\Http\Response;
 use Quantum\Http\Request;
 
@@ -20,7 +20,7 @@ class PostController extends Qt_Controller
     public function __before(ServiceFactory $serviceFactory, ViewFactory $view)
     {
         $this->view = $view;
-        $this->postService = $serviceFactory->get(PostService::class);
+        $this->postService = $serviceFactory->get(PostServiceDB::class);
 
         $this->view->setLayout('layouts/main');
     }
