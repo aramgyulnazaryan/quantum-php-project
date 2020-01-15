@@ -2,7 +2,6 @@
 
 namespace Modules\Api\Middlewares;
 
-use Quantum\Exceptions\ExceptionMessages;
 use Quantum\Middleware\Qt_Middleware;
 use Quantum\Http\Response;
 use Quantum\Http\Request;

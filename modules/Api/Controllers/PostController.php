@@ -2,11 +2,10 @@
 
 namespace Modules\Api\Controllers;
 
-use Base\Services\PostServiceDB;
 use Quantum\Factory\ServiceFactory;
 use Quantum\Factory\ViewFactory;
 use Quantum\Mvc\Qt_Controller;
-use Quantum\Hooks\HookManager;
+use Base\Services\PostServiceDB;
 use Quantum\Http\Response;
 use Quantum\Http\Request;
 
@@ -28,20 +27,30 @@ class PostController extends Qt_Controller
     public function getPosts(Response $response)
     {
         $posts = $this->postService->getPosts();
-        $response->json($posts);
+        $response->json([
+            'status' => 'success',
+            'data' => $posts
+        ]);
     }
 
     public function getPost(Response $response, $id)
     {
-        try {
-            $post = $this->postService->getPost($id);
-            $response->json($post);
-        } catch (\Exception $e) {
-            return json_encode($e->getMessage());
+        $post = $this->postService->getPost($id);
+        if ($post) {
+            $response->json([
+                'status' => 'success',
+                'data' => $post
+            ]);
+        } else {
+            $response->json([
+                'status' => 'error',
+                'message' => 'Post not found'
+            ]);
         }
+
     }
 
-    public function amendPost( Request $request, Response $response, $id = null)
+    public function amendPost(Request $request, Response $response, $id = null)
     {
         $post = [
             'title' => $request->get('title'),
@@ -50,17 +59,26 @@ class PostController extends Qt_Controller
 
         if ($id) {
             $this->postService->updatePost($id, $post);
-            $response->json(['status' => 'updated successfuly']);
+            $response->json([
+                'status' => 'success',
+                'message' => 'Updated successfuly'
+            ]);
         } else {
             $this->postService->addPost($post);
-            $response->json(['status' => 'created successfuly']);
+            $response->json([
+                'status' => 'success',
+                'message' => 'Created successfuly'
+            ]);
         }
     }
 
     public function deletePost(Response $response, $id)
     {
         $this->postService->deletePost($id);
-        $response->json(['status' => 'deleted successfuly']);
+        $response->json([
+            'status' => 'success',
+            'message' => 'Deleted successfuly'
+        ]);
     }
 
 }

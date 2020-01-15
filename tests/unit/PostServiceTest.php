@@ -1,13 +1,14 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Base\Services\PostService;
+use Base\Services\PostServiceDB;
 use Quantum\Factory\ServiceFactory;
 
 class PostServiceTest extends TestCase
 {
 
     public $postService;
+
     private $initialPost = [
         'title' => 'Lorem ipsum dolor sit amet',
         'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean condimentum condimentum nibh.',
@@ -15,13 +16,30 @@ class PostServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->postService = (new ServiceFactory)->get(PostService::class);
+        $this->postService = (new ServiceFactory)->get(PostServiceDB::class);
 
         $reflectionProperty = new \ReflectionProperty($this->postService, 'posts');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->postService, []);
+    }
 
-        $this->postService->addPost($this->initialPost);
+    public function tearDown(): void
+    {
+        $reflectionProperty = new \ReflectionProperty(ServiceFactory::class, 'initialized');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue(ServiceFactory::class, []);
+    }
+
+    public function testAddNewPost()
+    {
+        $this->postService->addPost([
+            'title' => 'Lorem ipsum dolor sit amet',
+            'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean condimentum condimentum nibh.',
+        ]);
+
+        $this->assertSame(1, count($this->postService->getPosts()));
+        $this->assertEquals($this->postService->getPost(1)['title'], 'Lorem ipsum dolor sit amet');
+        $this->assertEquals($this->postService->getPost(1)['content'], 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean condimentum condimentum nibh.');
     }
 
     public function testGetPosts()
@@ -41,18 +59,6 @@ class PostServiceTest extends TestCase
         $this->assertEquals($post['title'], 'Lorem ipsum dolor sit amet');
     }
 
-    public function testAddNewPost()
-    {
-        $this->postService->addPost([
-            'title' => 'Vestibulum lacus purus',
-            'content' => 'Vestibulum lacus purus, bibendum non nunc ac, fermentum eleifend augue.'
-        ]);
-
-        $this->assertSame(2, count($this->postService->getPosts()));
-        $this->assertEquals($this->postService->getPost(2)['title'], 'Vestibulum lacus purus');
-        $this->assertEquals($this->postService->getPost(2)['content'], 'Vestibulum lacus purus, bibendum non nunc ac, fermentum eleifend augue.');
-    }
-
     public function testUpdatePost()
     {
         $this->postService->updatePost(1, [
@@ -68,9 +74,7 @@ class PostServiceTest extends TestCase
     public function testDeletePost()
     {
         $this->postService->deletePost(1);
-
         $this->assertEquals(0, count($this->postService->getPosts()));
-        $this->assertNull($this->postService->getPost(1));
     }
 
 }

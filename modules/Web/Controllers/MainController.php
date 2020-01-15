@@ -2,6 +2,7 @@
 
 namespace Modules\Web\Controllers;
 
+use Quantum\Factory\ModelFactory;
 use Quantum\Factory\ViewFactory;
 use Quantum\Libraries\Lang\Lang;
 use Quantum\Mvc\Qt_Controller;

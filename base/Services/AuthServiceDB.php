@@ -28,8 +28,7 @@ use Modules\Web\Models\User;
  */
 class AuthServiceDB extends Qt_Service implements AuthServiceInterface
 {
-
-    protected static $users = [];
+    public static $users = [];
 
     private $authModel;
 
@@ -47,6 +46,7 @@ class AuthServiceDB extends Qt_Service implements AuthServiceInterface
         'resetTokenKey' => 'reset_token',
         'accessTokenKey' => 'access_token',
         'refreshTokenKey' => 'refresh_token',
+        'activationTokenKey' => 'activation_token',
     ];
 
     protected $visibleFields = [
@@ -70,6 +70,7 @@ class AuthServiceDB extends Qt_Service implements AuthServiceInterface
     public function add($data)
     {
         $user = $this->authModel->create();
+        $user->activation_token = $data['activation_token'];
         $user->username = $data['username'];
         $user->password = $data['password'];
         $user->firstname = $data['firstname'];

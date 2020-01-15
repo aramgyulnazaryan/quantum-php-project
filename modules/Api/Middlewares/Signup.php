@@ -8,7 +8,6 @@ use Quantum\Libraries\Validation\Validation;
 use Quantum\Exceptions\ExceptionMessages;
 use Quantum\Middleware\Qt_Middleware;
 use Quantum\Http\Response;
-use Quantum\Loader\Loader;
 use Quantum\Http\Request;
 
 class Signup extends Qt_Middleware

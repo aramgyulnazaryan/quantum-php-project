@@ -25,6 +25,7 @@ use Quantum\Mvc\Qt_Service;
  */
 class PostServiceDB extends Qt_Service
 {
+    public static $posts = [];
 
     private $postModel;
 

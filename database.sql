@@ -9,7 +9,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -26,22 +25,23 @@ CREATE TABLE `users` (
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `remember_token` text NOT NULL,
+  `activation_token` text NOT NULL,
   `reset_token` text NOT NULL,
   `refresh_token` text NOT NULL,
   `created_at` datetime NOT NULL,
   `last_login_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`);
+
 
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
-
 ALTER TABLE `posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

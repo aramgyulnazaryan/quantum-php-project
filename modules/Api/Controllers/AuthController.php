@@ -3,7 +3,7 @@
 namespace Modules\Api\Controllers;
 
 use Quantum\Exceptions\ExceptionMessages;
-use Quantum\Libraries\Lang\Lang;
+use Quantum\Exceptions\AuthException;
 use Quantum\Libraries\Mailer\Mailer;
 use Quantum\Mvc\Qt_Controller;
 use Quantum\Http\Response;
@@ -17,17 +17,18 @@ class AuthController extends Qt_Controller
     public function signin(Request $request, Response $response)
     {
         if ($request->getMethod() == 'POST') {
-
-            $tokens = auth()->signin($request->get('username'), $request->get('password'));
-            if ($tokens) {
-                $response->json([
-                    'status' => 'success',
-                    'data' => $tokens
-                ]);
-            } else {
+            try {
+                $tokens = auth()->signin($request->get('username'), $request->get('password'));
+                if ($tokens) {
+                    $response->json([
+                        'status' => 'success',
+                        'data' => $tokens
+                    ]);
+                }
+            } catch (AuthException $e) {
                 $response->json([
                     'status' => 'error',
-                    'message' => ExceptionMessages::INCORRECT_AUTH_CREDENTIALS
+                    'message' => $e->getMessage()
                 ]);
             }
         }
@@ -45,27 +46,38 @@ class AuthController extends Qt_Controller
                 'message' => ExceptionMessages::UUAUTHORIZED_REQUEST
             ]);
         }
-
     }
 
     public function signup(Request $request, Response $response)
     {
-        if (auth()->signup($request->all())) {
+        $mailer = new Mailer();
+        $mailer->createSubject(t('common.activate_account'));
+        $mailer->setTemplate(base_dir() . DS . 'base' . DS . 'views' . DS . 'email' . DS . 'activate');
+
+        if (auth()->signup($mailer, $request->all())) {
             $response->json([
                 'status' => 'success'
             ]);
         }
-
+    }
+    
+    public function activate(Request $request, Response $response) 
+    {
+        auth()->activate($request->get('activation_token'));
+        
+        $response->json([
+            'status' => 'success',
+            'message' => t('common.account_activated')
+        ]);
     }
 
     public function forget(Request $request, Response $response)
     {
         $mailer = new Mailer();
-        $mailer->createSubject(t('common.reset_password'));
+        $mailer->createSubject(t('common.activate_account'));
+        $mailer->setTemplate(base_dir() . DS . 'base' . DS . 'views' . DS . 'email' . DS . 'activate');
 
-        $emailTemplate = base_dir() . DS . 'base' . DS . 'views' . DS . 'email' . DS . 'reset';
-
-        auth()->forget($mailer, $request->get('email'), $emailTemplate);
+        auth()->forget($mailer, $request->get('email'));
 
         $response->json([
             'status' => 'success',
@@ -79,7 +91,6 @@ class AuthController extends Qt_Controller
         $response->json([
             'status' => 'success'
         ]);
-
     }
 
 }

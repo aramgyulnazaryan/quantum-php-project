@@ -3,9 +3,7 @@
 namespace Modules\Web\Middlewares;
 
 use Base\models\AuthModel;
-use Base\Services\AuthServiceDB;
 use Quantum\Factory\ModelFactory;
-use Quantum\Factory\ServiceFactory;
 use Quantum\Libraries\Validation\Validation;
 use Quantum\Exceptions\ExceptionMessages;
 use Quantum\Middleware\Qt_Middleware;
@@ -22,7 +20,6 @@ class Reset extends Qt_Middleware
 
     public function apply(Request $request, Response $response, \Closure $next)
     {
-
         list($lang, $token) = current_route_args();
 
         if ($request->getMethod() == 'POST') {

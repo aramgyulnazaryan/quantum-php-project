@@ -9,7 +9,7 @@
                                 <div class="uncol style-dark">
                                     <div class="uncont">
                                         <?php render_partial('partials/logo') ?>
-                                        <form method="POST" action="<?php echo base_url() . '/' . current_lang() .'/post/amend' . ($id ? '/'.$id : '') ?>">
+                                            <form method="post" action="<?php echo base_url() . '/' . current_lang() .'/post/amend/' . $id ?? '' ?>">
                                             <div class="heading-text el-text bottom-t-top animate_when_almost_visible pt-30" data-delay="200">
                                                 <input class="form-control" name="title" value="<?php echo $post['title'] ?? '' ?>" placeholder="<?php _t('common.title'); ?>" />
                                             </div>

@@ -15,6 +15,7 @@ class AuthServiceTest extends TestCase
         'lastname' => 'User',
         'remember_token' => '',
         'reset_token' => '',
+        'activation_token' => '',
     ];
     public $authService;
 
@@ -46,6 +47,7 @@ class AuthServiceTest extends TestCase
         $this->assertArrayHasKey('role', $user);
         $this->assertArrayHasKey('remember_token', $user);
         $this->assertArrayHasKey('reset_token', $user);
+        $this->assertArrayHasKey('activation_token', $user);
         $this->assertEquals('admin', $user['role']);
     }
 
@@ -56,6 +58,7 @@ class AuthServiceTest extends TestCase
             'password' => '$2y$12$0M78WcmUZYQq85vHZLoNW.CyDUezRxh9Ye8/Z8oWCwJmBrz8p.j7C',
             'firstname' => 'Guest',
             'lastname' => 'User',
+            'activation_token' => 'sdfsdfsdgds',
         ]);
 
         $this->assertIsArray($user);

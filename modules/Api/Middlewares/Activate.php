@@ -3,19 +3,14 @@
 namespace Modules\Api\Middlewares;
 
 use Base\models\AuthModel;
-use Quantum\Factory\ModelFactory;
-use Quantum\Libraries\Validation\Validation;
 use Quantum\Exceptions\ExceptionMessages;
+use Quantum\Factory\ModelFactory;
 use Quantum\Middleware\Qt_Middleware;
 use Quantum\Http\Response;
 use Quantum\Http\Request;
 
-class Reset extends Qt_Middleware
+class Activate extends Qt_Middleware
 {
-
-    private $ruels = [
-        'password' => 'required|min_len,6'
-    ];
 
     public function apply(Request $request, Response $response, \Closure $next)
     {
@@ -28,15 +23,7 @@ class Reset extends Qt_Middleware
             ]);
         }
 
-        $validated = Validation::is_valid($request->all(), $this->ruels);
-        if ($validated !== true) {
-            $response->json([
-                'status' => 'error',
-                'message' => $validated
-            ]);
-        }
-
-        $request->set('reset_token', $token);
+        $request->set('activation_token', $token);
 
         return $next($request, $response);
     }
@@ -44,7 +31,7 @@ class Reset extends Qt_Middleware
     private function checkToken($token)
     {
         $authModel = (new ModelFactory())->get(AuthModel::class);
-        $user = $authModel->criterias(['reset_token', '=', $token])->count();
+        $user = $authModel->criterias(['activation_token', '=', $token])->count();
 
         if($user) {
             return true;
